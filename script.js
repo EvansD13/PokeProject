@@ -11,6 +11,7 @@ async function loopThroughPokemon(moveArray,startIndex){
   console.log(sample)
   console.log('requesting...')
   data= await Promise.all(sample.map((move,i)=>axios.get(`https://pokeapi.co/api/v2/move/${i+1+startIndex}`)))
+  data= await Promise.all(sample.map((pokemon,i)=>axios.get(`https://pokeapi.co/api/v2/pokemon/${i+1+startIndex}`)))
   console.log('reading...')
   startIndex += 25
 
@@ -35,6 +36,7 @@ async function loopThroughPokemon(moveArray,startIndex){
     }).then(()=>{
       console.log('wait 30 seconds to allow server to relax :)')
       setTimeout(()=>loopThroughPokemon(moveArray,startIndex+25),30000)
+      setTimeout(()=>loopThroughPokemon(pokemonArray,startIndex+25),30000)
     }).catch(()=>{
       console.log('error, rejected by server. Trying again in 60 seconds...')
       setTimeout(()=>loopThroughPokemon(moveArray,startIndex),60000)
