@@ -10,7 +10,7 @@ async function loopThroughPokemon(pokemonArray,startIndex){
   sample=pokemonArray.slice(startIndex,startIndex+25)
   console.log(sample)
   console.log('requesting...')
-  data= await Promise.all(sample.map((pokemon,i)=>axios.get(`https://pokeapi.co/api/v2/pokemon/${i+1+startIndex-1017+10001}`)))
+  data= await Promise.all(sample.map((pokemon,i)=>axios.get(`https://pokeapi.co/api/v2/pokemon/${i+1+startIndex}`)))
   console.log('reading...')
   fs.readFile(`${__dirname}/pokemonDB.json`,'utf-8')
     .then(file=>{
@@ -28,7 +28,7 @@ async function loopThroughPokemon(pokemonArray,startIndex){
       return fs.writeFile(`${__dirname}/pokemonDB.json`,JSON.stringify(parsedFile),'utf-8')
     }).then(()=>{
       console.log('wait 30 seconds to allow server to relax :)')
-      setTimeout(()=>loopThroughPokemon(pokemonArray,startIndex+4),30000)
+      setTimeout(()=>loopThroughPokemon(pokemonArray,startIndex+25),30000)
     }).catch(()=>{
       console.log('error, rejected by server. Trying again in 60 seconds...')
       setTimeout(()=>loopThroughPokemon(pokemonArray,startIndex),60000)
