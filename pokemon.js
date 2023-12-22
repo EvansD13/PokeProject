@@ -24,8 +24,19 @@ class Pokemon{
         this.weight = stats.stats[antiCapital(this.name)]["weight"]
         this.base_exp = stats.stats[antiCapital(this.name)]["base_exp"]
         this.types = this.findTypes(types.types[antiCapital(this.name)])
+        this.ability = this.grantAbility(Math.floor(Math.random() * 2))
         
     }
+    grantAbility(n){
+        if (n == 0){
+            return capitalisation(abilities.abilities[antiCapital(this.name)][0].name)
+        }
+        else{
+        return capitalisation(abilities.abilities[antiCapital(this.name)][1].name)
+        }
+
+    }
+
     genNature(n){
         switch(n){
             case 1:
@@ -192,3 +203,6 @@ class Pokemon{
     
 }
 
+const Bulbasaur = new Pokemon("bulbasaur", 5)
+
+console.log(Bulbasaur)
