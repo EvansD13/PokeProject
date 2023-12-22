@@ -203,6 +203,4 @@ class Pokemon{
     
 }
 
-const Bulbasaur = new Pokemon("bulbasaur", 5)
-
-console.log(Bulbasaur)
+module.exports = Pokemon

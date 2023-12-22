@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cli": "^1.0.1",
+    "cli-spinner": "^0.2.10",
     "fs": "^0.0.1-security"
   }
 }
