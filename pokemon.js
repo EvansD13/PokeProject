@@ -14,15 +14,15 @@ function antiCapital(word){
 }
 
 
-class pokemon{
+class Pokemon{
     constructor(name, level){
         this.name = capitalisation(name.toLowerCase())
         this.level = level
         this.nature = this.genNature(Math.floor(Math.random() * 25) + 1)
         this.evs = [0, 0, 0, 0, 0, 0]
         this.stats = this.statScaling(stats.stats[antiCapital(this.name)], this.level, this.nature, this.evs)
-        this.weight = stats.stats[antiCapital(this.name)].weight
-        this.base_xp = stats.stats[antiCapital(this.name)].base_xp
+        this.weight = stats.stats[antiCapital(this.name)]["weight"]
+        this.base_exp = stats.stats[antiCapital(this.name)]["base_exp"]
         this.types = this.findTypes(types.types[antiCapital(this.name)])
         
     }
@@ -177,14 +177,13 @@ class pokemon{
                 Nature = 1
             }
             let ith_stat = Math.floor(((((2 * base_stats[stat] + ivs[i + 1] + (evs[i + 1]/4)) * level)/100) + 5) * Nature)
-            console.log(`${stat}: ${ith_stat}`)
             stats.push(ith_stat)
         }
         return stats
     }
 
     findTypes(type_data){
-        if (type_data === 2){
+        if (type_data.length === 2){
             return [capitalisation(type_data[0].type), capitalisation(type_data[1].type)]
         }else{
             return capitalisation(type_data[0].type)
