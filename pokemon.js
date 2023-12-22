@@ -16,7 +16,7 @@ function antiCapital(word){
 
 class pokemon{
     constructor(name, level){
-        this.name = capitalisation(name)
+        this.name = capitalisation(name.toLowerCase())
         this.level = level
         this.nature = this.genNature(Math.floor(Math.random() * 25) + 1)
         this.evs = [0, 0, 0, 0, 0, 0]
