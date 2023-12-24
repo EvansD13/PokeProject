@@ -5,6 +5,7 @@ const abilities = require(`./resources/abilites.json`)
 const stats = require(`./resources/stats.json`)
 const types = require(`./resources/types.json`)
 const { type } = require("os")
+const moves = require("./resources/moveDB.json")
 
 function capitalisation(word){
     return word[0].toUpperCase() + word.slice(1)
@@ -25,6 +26,8 @@ class Pokemon{
         this.base_exp = stats.stats[antiCapital(this.name)]["base_exp"]
         this.types = this.findTypes(types.types[antiCapital(this.name)])
         this.ability = this.grantAbility(Math.floor(Math.random() * 2))
+        this.moves = []//Auto fetch at most the last four moves that can be learned by level up. Overwrite as necessary
+        this.currentHP = this.stats[0]
         
     }
     grantAbility(n){
@@ -32,9 +35,21 @@ class Pokemon{
             return capitalisation(abilities.abilities[antiCapital(this.name)][0].name)
         }
         else{
-        return capitalisation(abilities.abilities[antiCapital(this.name)][1].name)
+            return capitalisation(abilities.abilities[antiCapital(this.name)][1].name)
         }
 
+    }
+    addMoves(move){
+        const attacks = moves.moves.map(atk => atk.name)
+        for (let i = 0; i < attacks.length; i++){
+            if (attacks[i] == move){
+                this.moves.push(moves.moves[i])
+            }
+        }        
+    }
+
+    takeDamage(damage){
+        this.currentHP = this.currentHP - damage
     }
 
     genNature(n){
@@ -153,7 +168,7 @@ class Pokemon{
     statScaling(base_stats, level, nature, evs) {
         let ivs = []
         for(let j = 0; j < 6; j++){
-            ivs.push(Math.floor(Math.random() * 31)) //Random IV Assignment
+            ivs.push(Math.floor(Math.random() * 32)) //Random IV Assignment
         }
         let stats = []
         const nature_mods = this.naturePlusMinus(nature)
@@ -203,4 +218,13 @@ class Pokemon{
     
 }
 
-module.exports = Pokemon
+//const pokemon = new Pokemon("popplio", 5)
+//pokemon.addMoves("pound"); pokemon.addMoves("water-gun"); pokemon.addMoves("screech")
+
+//console.log(pokemon)
+
+module.exports = {
+    Pokemon,
+    capitalisation,
+    antiCapital
+}

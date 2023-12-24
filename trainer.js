@@ -1,5 +1,5 @@
 const pokeGen = require("./pokemon")
-
+const levelUpMoves = require("./pokeDB.json")
 
 class Trainer{
     constructor(trainer_name){
@@ -11,13 +11,13 @@ class Trainer{
     }
 
     addTeam(pokemon, level){
-        const new_Mon = new pokeGen(pokemon, level)
+        const new_Mon = new pokeGen.Pokemon(pokemon, level)
         if (this.team.length < 6){
             this.team.push(new_Mon)
         }
     }
 
 }
-
+//console.log(levelUpMoves.pokemon[500])
 
 module.exports = Trainer
