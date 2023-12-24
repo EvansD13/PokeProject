@@ -12,6 +12,7 @@
   "dependencies": {
     "cli": "^1.0.1",
     "cli-spinner": "^0.2.10",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "inquirer": "^9.2.12"
   }
 }
