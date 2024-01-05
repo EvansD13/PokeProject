@@ -25,13 +25,16 @@ class Battle{
         this.playerStatChanges = [0, 0, 0, 0, 0]
         this.opponentStatChanges = [0, 0, 0, 0, 0]
     }
+    statChange(stat_spread, attacker, defender){
+        return
+    }
+
     damageCalc(move, attacker, defender){
         const level = attacker.level
         const accuracy = move.accuracy
         const dc = move.damage_class.name
         const power = move.power
         let attack; let defense
-        
         if (dc == "status"){
             const change = move.stat_changes[0].change
             const stat_to_change = move.stat_changes[0].stat.name
@@ -53,8 +56,7 @@ class Battle{
                     stat_index = 4
                     break
             }
-            if (defender == this.player){
-                console.log("here")
+            if (defender == this.player){// This needs to be rewritten - there is a variable "target" that needs to be incorporated here
                 this.playerStatChanges[stat_index] = change
             }else{
                 this.opponentStatChanges[stat_index] = change
