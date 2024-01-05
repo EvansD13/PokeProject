@@ -1,3 +1,4 @@
+const { stat } = require("fs")
 const pokeGen = require(`./pokemon.js`)
 const Trainer = require(`./trainer.js`)
 const Spinner = require("cli-spinner").Spinner
@@ -21,46 +22,81 @@ class Battle{
     constructor(player, opponent){
         this.player = player
         this.opponent = opponent
+        this.playerStatChanges = [0, 0, 0, 0, 0]
+        this.opponentStatChanges = [0, 0, 0, 0, 0]
     }
+    statChange(stat_spread, attacker, defender){
+        return
+    }
+
     damageCalc(move, attacker, defender){
         const level = attacker.level
         const accuracy = move.accuracy
         const dc = move.damage_class.name
         const power = move.power
         let attack; let defense
-
-        if (dc == "physical"){
-            attack = attacker.stats[1]
-            defense = defender.stats[2]
-        }else if (dc == "special"){
-            attack = attacker.stats[3]
-            defense = defender.stats[4]
-        }
-
-        let STAB
-        (attacker.types.includes(pokeGen.capitalisation(move.type.name)) ? STAB = 1.5 : STAB = 1)
+        if (dc == "status"){
+            const change = move.stat_changes[0].change
+            const stat_to_change = move.stat_changes[0].stat.name
+            let stat_index 
+            switch(stat_to_change){
+                case "attack":
+                    stat_index = 0
+                    break
+                case "defense":
+                    stat_index = 1
+                    break
+                case "special-attack":
+                    stat_index = 2
+                    break
+                case "special-defense":
+                    stat_index = 3
+                    break
+                case "speed":
+                    stat_index = 4
+                    break
+            }
+            if (defender == this.player){// This needs to be rewritten - there is a variable "target" that needs to be incorporated here
+                this.playerStatChanges[stat_index] = change
+            }else{
+                this.opponentStatChanges[stat_index] = change
+            }console.log(this.playerStatChanges, this.opponentStatChanges)
             
-        const random = Math.floor(Math.random() * (16) + 85)
-        let crit; let critical_role = Math.floor(Math.random() * 100 + 1)
-        switch(move.meta.crit_rate){
-            case 0:
-                (critical_role < 5 ? crit = 1.5 : crit = 1)
-                break
-            case 1:
-                (critical_role < 13 ? crit = 1.5 : crit = 1)
-                break
-            case 2:
-                (critical_role < 50 ? crit = 1.5 : crit = 1)
-                break
-            case 3:
-                crit = 1.5
-                break
-            case 4:
-                crit = 1.5
-                break
+        }else{
+            if (dc == "physical"){
+                attack = attacker.stats[1]
+                defense = defender.stats[2]
+            }else if (dc == "special"){
+                attack = attacker.stats[3]
+                defense = defender.stats[4]
+            }
+            let STAB
+            (attacker.types.includes(pokeGen.capitalisation(move.type.name)) ? STAB = 1.5 : STAB = 1)
+                
+            const random = Math.floor(Math.random() * (16) + 85)
+            let crit; let critical_role = Math.floor(Math.random() * 100 + 1)
+            switch(move.meta.crit_rate){
+                case 0:
+                    (critical_role < 5 ? crit = 1.5 : crit = 1)
+                    break
+                case 1:
+                    (critical_role < 13 ? crit = 1.5 : crit = 1)
+                    break
+                case 2:
+                    (critical_role < 50 ? crit = 1.5 : crit = 1)
+                    break
+                case 3:
+                    crit = 1.5
+                    break
+                case 4:
+                    crit = 1.5
+                    break
+            }
+            const damage = Math.floor((((((2 * level)/5) + 2) * power * attack/defense)/50 + 2) * crit * random/100 * STAB)
+            defender.takeDamage(damage)
+    
         }
-        const damage = Math.floor((((((2 * level)/5) + 2) * power * attack/defense)/50 + 2) * crit * random/100 * STAB)
-        defender.takeDamage(damage)
+
         let color
         (defender == player.team[0] ? color = "\x1b[33m" : color = "\x1b[31m") 
         battleText(`${attacker.name} used ${pokeGen.capitalisation(move.name)}!`)
@@ -133,7 +169,7 @@ function healthBar(maxHp, currentHp) {
 
 
 player.addTeam("popplio", 5); opponent.addTeam("rowlet", 5) /// Adds levelled pokemon to respective teams
-player.team[0].addMoves("pound"); opponent.team[0].addMoves("peck") // Assigns a basic move to each pokemon
+player.team[0].addMoves("pound"); player.team[0].addMoves("screech"); opponent.team[0].addMoves("peck") // Assigns a basic move to each pokemon
 
 
 console.log(`Trainer ${opponent.name} would like to battle!`)
@@ -144,12 +180,12 @@ battleText(`${player.name} sent out ${player.team[0].name}! (Level ${player.team
 //Slightly aesthetic health bar 
 let playerHPBar = healthBar(player.team[0].stats[0], player.team[0].currentHP)
 let opponentHPBar = healthBar(opponent.team[0].stats[0], opponent.team[0].currentHP)
-
+//console.log(player)
 
 battleText(`Lv ${player.team[0].level} ${player.team[0].name}: \x1b[33m${playerHPBar}\x1b[0m`)
 battleText(`Lv ${opponent.team[0].level} ${opponent.team[0].name}: \x1b[31m${opponentHPBar}\x1b[0m`)
 
 const battle = new Battle(player.team[0], opponent.team[0])
-battle.turn(player.team[0].moves[0], opponent.team[0].moves[0])
+battle.turn(player.team[0].moves[1], opponent.team[0].moves[0])
 
 
